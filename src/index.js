@@ -1,4 +1,10 @@
-const { ApolloServer, gql } = require('apollo-server');
+
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
+
+import * as path from "path";
+import { ApolloServer, gql } from "apollo-server";
+import { StoreResolver } from './resolvers.js';
 
 // ⚽️  Goal
 // --------
@@ -19,23 +25,18 @@ const { ApolloServer, gql } = require('apollo-server');
 // 4) Create a resolver function that returns the list of stores.
 // 5) Try out the GraphQL query in the GraphQL Playground (🚀 http://localhost:4000/)
 
-// Type definitions define the "shape" of your data and specify
-// which ways the data can be fetched from the GraphQL server.
-const typeDefs = gql`
-  type Query {
-    test: String
-  }
-`;
 
-// Resolvers define the technique for fetching the types in the
-// schema.
-const resolvers = {
-};
+
+// create the schema using TypeGraphQL, pass the resolver
+const schema = await buildSchema({
+  resolvers: [StoreResolver],
+  emitSchemaFile: path.resolve(".", "schema.gql"),
+});
 
 // In the most basic sense, the ApolloServer can be started
 // by passing type definitions (typeDefs) and the resolvers
 // responsible for fetching the data for those types.
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ schema });
 
 // This `listen` method launches a web-server. Existing apps
 // can utilize middleware options.

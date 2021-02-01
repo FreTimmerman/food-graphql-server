@@ -1,8 +1,8 @@
-const uuid = require('uuid');
+import * as uuid from 'uuid';
 
 const stores = [
   {
-    id: 'cc406ed9-fc02-4185-b073-8c12b61b5c79'
+    id: 'cc406ed9-fc02-4185-b073-8c12b61b5c79',
     name: 'Den Olijfboom',
   },
   {
