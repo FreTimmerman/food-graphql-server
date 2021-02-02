@@ -93,3 +93,59 @@ Product = __decorate([
     ObjectType()
 ], Product);
 export { Product };
+let Reservation = class Reservation {
+};
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], Reservation.prototype, "id", void 0);
+__decorate([
+    Field(type => [ReservationProduct]),
+    __metadata("design:type", Array)
+], Reservation.prototype, "reservationProducts", void 0);
+__decorate([
+    Field(type => Date),
+    __metadata("design:type", Date)
+], Reservation.prototype, "date", void 0);
+Reservation = __decorate([
+    ObjectType()
+], Reservation);
+export { Reservation };
+let ReservationProduct = class ReservationProduct {
+};
+__decorate([
+    Field(type => Product),
+    __metadata("design:type", Product)
+], ReservationProduct.prototype, "product", void 0);
+__decorate([
+    Field(type => Int),
+    __metadata("design:type", Number)
+], ReservationProduct.prototype, "quantity", void 0);
+ReservationProduct = __decorate([
+    ObjectType()
+], ReservationProduct);
+export { ReservationProduct };
+let ReservationInput = class ReservationInput {
+};
+__decorate([
+    Field(type => [ReservationProductInput]),
+    __metadata("design:type", Array)
+], ReservationInput.prototype, "reservationProducts", void 0);
+ReservationInput = __decorate([
+    InputType()
+], ReservationInput);
+export { ReservationInput };
+let ReservationProductInput = class ReservationProductInput {
+};
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], ReservationProductInput.prototype, "productId", void 0);
+__decorate([
+    Field(type => Int),
+    __metadata("design:type", Number)
+], ReservationProductInput.prototype, "quantity", void 0);
+ReservationProductInput = __decorate([
+    InputType()
+], ReservationProductInput);
+export { ReservationProductInput };

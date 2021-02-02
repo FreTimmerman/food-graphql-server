@@ -47,3 +47,36 @@ export class Product {
   @Field(type => Float)
   price: number;
 }
+
+@ObjectType()
+export class Reservation {
+  @Field()
+  id: String;
+  @Field(type => [ReservationProduct])
+  reservationProducts: [ReservationProduct];
+  @Field(type => Date)
+  date: Date;
+}
+
+@ObjectType()
+export class ReservationProduct {
+  @Field(type => Product)
+  product: Product;
+  @Field(type => Int)
+  quantity: number;
+}
+
+
+@InputType()
+export class ReservationInput {
+  @Field(type => [ReservationProductInput])
+  reservationProducts: [ReservationProductInput];
+}
+
+@InputType()
+export class ReservationProductInput {
+  @Field()
+  productId: string;
+  @Field(type => Int)
+  quantity: number;
+}

@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { Resolver, Query, Mutation, Arg, FieldResolver, Root } from "type-graphql";
-import { Store, StoreInput, Product } from "./typeDefs.js";
-import { createStore, getStores, getStore, getStoreProducts } from "./data.js";
+import { Store, StoreInput, Product, Reservation, ReservationProduct, ReservationInput } from "./typeDefs.js";
+import { createStore, getStores, getStore, getStoreProducts, createReservation, getReservationProducts } from "./data.js";
 import * as yup from 'yup';
 import { UserInputError } from "apollo-server";
 
@@ -18,8 +18,17 @@ const createStoreSchema = yup.object()
 const getStoreSchema = yup.object()
   .shape({
     id: yup.string().length(36).required()
-  })
+  });
 
+const createReservationSchema = yup.object()
+  .shape({
+    reservationProducts: yup.array(
+      yup.object().shape({
+        productId: yup.string().length(36),
+        quantity: yup.number().required().positive().integer(),
+      })
+    ),
+  });
 
 @Resolver(() => Store)
 export class StoreResolver {
@@ -28,6 +37,7 @@ export class StoreResolver {
   async stores(): Promise<Store[]> {
     return await getStores();
   }
+
   @Query(() => Store, { description: "Get a specific store" })
   async store(@Arg("id") id: String/* ,@Arg("withProducts", { nullable: true }) withProducts: boolean*/): Promise<Store> {
     // check validity
@@ -48,6 +58,7 @@ export class StoreResolver {
   }
 
 
+
   @Mutation(() => Store, { description: "Create a new store" })
   async createStore(@Arg("input") input: StoreInput): Promise<Store | UserInputError> {
     // check validity
@@ -61,5 +72,24 @@ export class StoreResolver {
         return new UserInputError('Invalid input', { validationErrors: err.errors });
       });
   }
+}
+@Resolver(() => Reservation)
+export class ReservationResolver {
 
+  @FieldResolver(() => [ReservationProduct])
+  async reservationProducts(@Root() reservation: Reservation) {
+    return await getReservationProducts(reservation.id);
+  }
+
+  @Mutation(() => Reservation, { description: "Create a new reservation" })
+  async createReservation(@Arg("input") input: ReservationInput): Promise<Reservation | UserInputError> {
+    return await createReservationSchema
+      .validate(input)
+      .then(validData => {
+        return createReservation(validData);
+      })
+      .catch(err => {
+        return new UserInputError('Invalid input', { validationErrors: err.errors });
+      })
+  }
 }

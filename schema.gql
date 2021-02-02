@@ -3,40 +3,68 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
+
 type Mutation {
+  """Create a new reservation"""
+  createReservation(input: ReservationInput!): Reservation!
+
   """Create a new store"""
-  createStore(input: StoreInput): Store
+  createStore(input: StoreInput!): Store!
 }
 
 type Product {
-  description: String
-  id: String
-  name: String
-  price: Float
+  description: String!
+  id: String!
+  name: String!
+  price: Float!
 }
 
 type Query {
   """Get a specific store"""
-  store(id: String): Store
+  store(id: String!): Store!
 
   """Get all the stores"""
-  stores: [Store]
+  stores: [Store!]!
+}
+
+type Reservation {
+  date: DateTime!
+  id: String!
+  reservationProducts: [ReservationProduct!]!
+}
+
+input ReservationInput {
+  reservationProducts: [ReservationProductInput!]!
+}
+
+type ReservationProduct {
+  product: Product!
+  quantity: Int!
+}
+
+input ReservationProductInput {
+  productId: String!
+  quantity: Int!
 }
 
 type Store {
-  city: String
-  id: String
-  name: String
-  number: Int
-  postalCode: String
-  products: [Product]
-  street: String
+  city: String!
+  id: String!
+  name: String!
+  number: Int!
+  postalCode: String!
+  products: [Product!]!
+  street: String!
 }
 
 input StoreInput {
-  city: String
-  name: String
-  number: Int
-  postalCode: String
-  street: String
+  city: String!
+  name: String!
+  number: Int!
+  postalCode: String!
+  street: String!
 }

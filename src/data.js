@@ -51,6 +51,10 @@ const products = [{
   storeId: '5f2919aa-333a-4745-8166-3002ab30de0e',
 }];
 
+const reservations = [];
+
+let reservationProducts = [];
+
 
 export function createStore({ city, name, number, postalCode, street }) {
   const newStore = {
@@ -74,6 +78,33 @@ export function getStore(storeId) {
 }
 
 export function getStoreProducts(storeId) {
-  console.log(storeId);
   return products.filter(prod => prod.storeId === storeId)
-} 
+}
+
+export function getReservationProducts(reservationId) {
+  return reservationProducts
+    .filter(rp => rp.reservationId === reservationId)
+    .map(rp => ({
+      product: products.find(p => p.id === rp.productId),
+      quantity: rp.quantity
+    })
+    );
+}
+
+export function createReservation(reservation) {
+  //create new reservation and add it to db
+  const reservationId = uuid();
+  const newReservation = {
+    id: reservationId,
+    date: new Date(),
+  };
+  reservations.push(newReservation);
+  //add the reservationID to the reservationproducts, then add them to the db
+  reservationProducts = reservationProducts.concat(
+    reservation.reservationProducts.map(rp => ({
+      ...rp,
+      reservationId
+    })
+    ));
+  return newReservation;
+}

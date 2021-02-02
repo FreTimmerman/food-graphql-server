@@ -12,8 +12,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 import "reflect-metadata";
 import { Resolver, Query, Mutation, Arg, FieldResolver, Root } from "type-graphql";
-import { Store, StoreInput, Product } from "./typeDefs.js";
-import { createStore, getStores, getStore, getStoreProducts } from "./data.js";
+import { Store, StoreInput, Product, Reservation, ReservationProduct, ReservationInput } from "./typeDefs.js";
+import { createStore, getStores, getStore, getStoreProducts, createReservation, getReservationProducts } from "./data.js";
 import * as yup from 'yup';
 import { UserInputError } from "apollo-server";
 // define input validations
@@ -28,6 +28,13 @@ const createStoreSchema = yup.object()
 const getStoreSchema = yup.object()
     .shape({
     id: yup.string().length(36).required()
+});
+const createReservationSchema = yup.object()
+    .shape({
+    reservationProducts: yup.array(yup.object().shape({
+        productId: yup.string().length(36),
+        quantity: yup.number().required().positive().integer(),
+    })),
 });
 let StoreResolver = class StoreResolver {
     async stores() {
@@ -92,3 +99,36 @@ StoreResolver = __decorate([
     Resolver(() => Store)
 ], StoreResolver);
 export { StoreResolver };
+let ReservationResolver = class ReservationResolver {
+    async reservationProducts(reservation) {
+        return await getReservationProducts(reservation.id);
+    }
+    async createReservation(input) {
+        return await createReservationSchema
+            .validate(input)
+            .then(validData => {
+            return createReservation(validData);
+        })
+            .catch(err => {
+            return new UserInputError('Invalid input', { validationErrors: err.errors });
+        });
+    }
+};
+__decorate([
+    FieldResolver(() => [ReservationProduct]),
+    __param(0, Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Reservation]),
+    __metadata("design:returntype", Promise)
+], ReservationResolver.prototype, "reservationProducts", null);
+__decorate([
+    Mutation(() => Reservation, { description: "Create a new reservation" }),
+    __param(0, Arg("input")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [ReservationInput]),
+    __metadata("design:returntype", Promise)
+], ReservationResolver.prototype, "createReservation", null);
+ReservationResolver = __decorate([
+    Resolver(() => Reservation)
+], ReservationResolver);
+export { ReservationResolver };

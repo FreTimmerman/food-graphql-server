@@ -4,7 +4,7 @@ import { buildSchema } from "type-graphql";
 
 import * as path from "path";
 import { ApolloServer, gql } from "apollo-server";
-import { StoreResolver } from './resolvers.js';
+import { StoreResolver, ReservationResolver } from './resolvers.js';
 
 // ⚽️  Goal
 // --------
@@ -29,8 +29,8 @@ import { StoreResolver } from './resolvers.js';
 
 // create the schema using TypeGraphQL, pass the resolver
 const schema = await buildSchema({
-  resolvers: [StoreResolver],
-  nullableByDefault: true,
+  resolvers: [StoreResolver, ReservationResolver],
+  //nullableByDefault: true,
   emitSchemaFile: path.resolve(".", "schema.gql"),
 });
 
