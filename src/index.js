@@ -30,6 +30,7 @@ import { StoreResolver } from './resolvers.js';
 // create the schema using TypeGraphQL, pass the resolver
 const schema = await buildSchema({
   resolvers: [StoreResolver],
+  nullableByDefault: true,
   emitSchemaFile: path.resolve(".", "schema.gql"),
 });
 

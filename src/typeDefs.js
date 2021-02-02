@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import "reflect-metadata";
-import { ObjectType, Field, InputType, Int } from "type-graphql";
+import { ObjectType, Field, InputType, Int, Float } from "type-graphql";
 let Store = class Store {
 };
 __decorate([
@@ -37,6 +37,10 @@ __decorate([
     Field(),
     __metadata("design:type", String)
 ], Store.prototype, "street", void 0);
+__decorate([
+    Field(type => [Product]),
+    __metadata("design:type", Array)
+], Store.prototype, "products", void 0);
 Store = __decorate([
     ObjectType()
 ], Store);
@@ -67,3 +71,25 @@ StoreInput = __decorate([
     InputType()
 ], StoreInput);
 export { StoreInput };
+let Product = class Product {
+};
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], Product.prototype, "id", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], Product.prototype, "name", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], Product.prototype, "description", void 0);
+__decorate([
+    Field(type => Float),
+    __metadata("design:type", Number)
+], Product.prototype, "price", void 0);
+Product = __decorate([
+    ObjectType()
+], Product);
+export { Product };

@@ -5,27 +5,38 @@
 
 type Mutation {
   """Create a new store"""
-  createStore(input: StoreInput!): Store!
+  createStore(input: StoreInput): Store
+}
+
+type Product {
+  description: String
+  id: String
+  name: String
+  price: Float
 }
 
 type Query {
+  """Get a specific store"""
+  store(id: String): Store
+
   """Get all the stores"""
-  stores: [Store!]!
+  stores: [Store]
 }
 
 type Store {
-  city: String!
-  id: String!
-  name: String!
-  number: Int!
-  postalCode: String!
-  street: String!
+  city: String
+  id: String
+  name: String
+  number: Int
+  postalCode: String
+  products: [Product]
+  street: String
 }
 
 input StoreInput {
-  city: String!
-  name: String!
-  number: Int!
-  postalCode: String!
-  street: String!
+  city: String
+  name: String
+  number: Int
+  postalCode: String
+  street: String
 }

@@ -11,9 +11,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 import "reflect-metadata";
-import { Resolver, Query, Mutation, Arg } from "type-graphql";
-import { Store, StoreInput } from "./typeDefs.js";
-import { createStore, getStores } from "./data.js";
+import { Resolver, Query, Mutation, Arg, FieldResolver, Root } from "type-graphql";
+import { Store, StoreInput, Product } from "./typeDefs.js";
+import { createStore, getStores, getStore, getStoreProducts } from "./data.js";
 import * as yup from 'yup';
 import { UserInputError } from "apollo-server";
 // define input validations
@@ -25,12 +25,28 @@ const createStoreSchema = yup.object()
     postalCode: yup.string().required().max(10),
     street: yup.string().required().max(255),
 });
+const getStoreSchema = yup.object()
+    .shape({
+    id: yup.string().length(36).required()
+});
 let StoreResolver = class StoreResolver {
-    constructor() {
-        this.storeCollection = getStores();
-    }
     async stores() {
-        return await this.storeCollection;
+        return await getStores();
+    }
+    async store(id /* ,@Arg("withProducts", { nullable: true }) withProducts: boolean*/) {
+        // check validity
+        return await getStoreSchema
+            .validate({ id: id })
+            .then(validData => {
+            return getStore(validData.id);
+        })
+            .catch(err => {
+            return new UserInputError('Invalid input', { validationErrors: err.errors });
+        });
+    }
+    //Extend the Store type with a list of its products.
+    async products(store) {
+        return await getStoreProducts(store.id);
     }
     async createStore(input) {
         // check validity
@@ -46,11 +62,25 @@ let StoreResolver = class StoreResolver {
     }
 };
 __decorate([
-    Query(returns => [Store], { description: "Get all the stores" }),
+    Query(() => [Store], { description: "Get all the stores" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], StoreResolver.prototype, "stores", null);
+__decorate([
+    Query(() => Store, { description: "Get a specific store" }),
+    __param(0, Arg("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String /* ,@Arg("withProducts", { nullable: true }) withProducts: boolean*/]),
+    __metadata("design:returntype", Promise)
+], StoreResolver.prototype, "store", null);
+__decorate([
+    FieldResolver(() => [Product]),
+    __param(0, Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Store]),
+    __metadata("design:returntype", Promise)
+], StoreResolver.prototype, "products", null);
 __decorate([
     Mutation(() => Store, { description: "Create a new store" }),
     __param(0, Arg("input")),
@@ -59,6 +89,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], StoreResolver.prototype, "createStore", null);
 StoreResolver = __decorate([
-    Resolver()
+    Resolver(() => Store)
 ], StoreResolver);
 export { StoreResolver };
