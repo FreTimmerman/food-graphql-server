@@ -10,18 +10,60 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import "reflect-metadata";
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field, InputType, Int } from "type-graphql";
 let Store = class Store {
 };
 __decorate([
-    Field(() => ID),
+    Field(),
     __metadata("design:type", String)
 ], Store.prototype, "id", void 0);
 __decorate([
-    Field(() => String, { description: "The name of the store" }),
+    Field(),
     __metadata("design:type", String)
 ], Store.prototype, "name", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], Store.prototype, "city", void 0);
+__decorate([
+    Field(type => Int),
+    __metadata("design:type", Number)
+], Store.prototype, "number", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], Store.prototype, "postalCode", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], Store.prototype, "street", void 0);
 Store = __decorate([
     ObjectType()
 ], Store);
 export { Store };
+let StoreInput = class StoreInput {
+};
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], StoreInput.prototype, "name", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], StoreInput.prototype, "city", void 0);
+__decorate([
+    Field(type => Int),
+    __metadata("design:type", Number)
+], StoreInput.prototype, "number", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], StoreInput.prototype, "postalCode", void 0);
+__decorate([
+    Field(),
+    __metadata("design:type", String)
+], StoreInput.prototype, "street", void 0);
+StoreInput = __decorate([
+    InputType()
+], StoreInput);
+export { StoreInput };

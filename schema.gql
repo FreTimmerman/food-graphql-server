@@ -3,14 +3,29 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type Mutation {
+  """Create a new store"""
+  createStore(input: StoreInput!): Store!
+}
+
 type Query {
-  """Get all the stores """
+  """Get all the stores"""
   stores: [Store!]!
 }
 
 type Store {
-  id: ID!
-
-  """The name of the store"""
+  city: String!
+  id: String!
   name: String!
+  number: Int!
+  postalCode: String!
+  street: String!
+}
+
+input StoreInput {
+  city: String!
+  name: String!
+  number: Int!
+  postalCode: String!
+  street: String!
 }

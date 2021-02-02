@@ -2,14 +2,35 @@
 // which ways the data can be fetched from the GraphQL server.
 
 import "reflect-metadata";
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field, ID, InputType, Int } from "type-graphql";
+import { number } from "yup/lib/locale";
 
 
 @ObjectType()
 export class Store {
-  @Field(() => ID)
+  @Field()
   id: string;
-
-  @Field(() => String, { description: "The name of the store" })
+  @Field()
   name: string;
+  @Field()
+  city: string;
+  @Field(type => Int)
+  number: number;
+  @Field()
+  postalCode: string
+  @Field()
+  street: string
+}
+@InputType()
+export class StoreInput {
+  @Field()
+  name: string;
+  @Field()
+  city: string;
+  @Field(type => Int)
+  number: number;
+  @Field()
+  postalCode: string
+  @Field()
+  street: string
 }
