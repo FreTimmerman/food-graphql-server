@@ -1,0 +1,60 @@
+ {
+  stores{
+    id,
+    name,
+    city,
+    number,
+    postalCode,
+    street,
+    products{description,name,price}
+  }
+}
+
+mutation{
+  createStore( 
+    	input:{ 
+        name: "asdf",
+        city: "asdf",
+        number:2,
+    		postalCode: "hallohallo",
+    		street: "asdf"
+    	}
+  	) {
+    id,
+    name,
+    city,
+    number,
+    postalCode,
+    street
+  }
+}
+
+query getStore($storeId: String!, $withProducts: Boolean!){
+  store (id:$storeId){
+    id,
+    name,
+    city,
+    number,
+    postalCode,
+    street,
+    products @include(if: $withProducts) {id,description,name,price}
+  }
+}
+var {"storeId": "5f2919aa-333a-4745-8166-3002ab30de0e","withProducts":true}
+
+mutation($productId:String!){
+  createReservation(
+    input:{
+      reservationProducts:
+      	[
+          {	
+            productId:$productId,
+            quantity:2
+          }
+        ]
+    }
+  ) {
+    id,date,reservationProducts{product{name,description,price},quantity}
+  }
+}
+var {"productId":"5bb3fbcc-7ec2-44fe-a04b-a0251cecf1e6"}
