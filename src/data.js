@@ -1,4 +1,4 @@
-const uuid = require('uuid');
+import uuid from 'uuid';
 
 const stores = [
   {
@@ -55,7 +55,8 @@ const reservations = [];
 
 let reservationProducts = [];
 
-function createStore({ city, name, number, postalCode, street }) {
+
+export function createStore({ city, name, number, postalCode, street }) {
   const newStore = {
     city,
     id: uuid(),
@@ -76,41 +77,38 @@ function getStores() {
   return stores;
 }
 
-function getStoreProducts(storeId) {
-  return products.filter((p) => p.storeId === storeId)
+export function getStore(storeId) {
+  return stores.find(store => store.id === storeId);
 }
 
-function getReservationProducts(reservationId) {
+export function getStoreProducts(storeId) {
+  return products.filter(prod => prod.storeId === storeId)
+}
+
+export function getReservationProducts(reservationId) {
   return reservationProducts
-    // Join
-    .filter((rp) => rp.reservationId === reservationId)
-    .map((rp) => ({
+    .filter(rp => rp.reservationId === reservationId)
+    .map(rp => ({
       product: products.find(p => p.id === rp.productId),
       quantity: rp.quantity
-    }));
+    })
+    );
 }
 
-function createReservation(reservation) {
+export function createReservation(reservation) {
+  //create new reservation and add it to db
   const reservationId = uuid();
   const newReservation = {
-    date: new Date(),
     id: reservationId,
+    date: new Date(),
   };
   reservations.push(newReservation);
+  //add the reservationID to the reservationproducts, then add them to the db
   reservationProducts = reservationProducts.concat(
-    reservation.reservationProducts.map((reservationProduct) => ({
-      ...reservationProduct,
+    reservation.reservationProducts.map(rp => ({
+      ...rp,
       reservationId
     })
-  ));
+    ));
   return newReservation;
 }
-
-module.exports = {
-  createStore,
-  createReservation,
-  getStore,
-  getStores,
-  getStoreProducts,
-  getReservationProducts
-};

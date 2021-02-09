@@ -1,21 +1,26 @@
 {
   "name": "food-graphql-server",
+  "type": "module",
   "version": "1.0.0",
   "description": "The GraphQL server to reserve food.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index.js"
+    "start": "tsc-watch --onsuccess \"node ./src/index.js\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^2.3.1",
-    "graphql": "^14.1.1",
+    "apollo-server": "^2.19.2",
+    "class-validator": "^0.13.1",
+    "graphql": "^15.5.0",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^1.1.1",
+    "typescript": "^4.1.3",
     "uuid": "^3.3.2",
-    "yup": "^0.26.10"
+    "yup": "^0.32.8"
   },
   "devDependencies": {
-    "nodemon": "^1.18.9"
+    "tsc-watch": "^4.2.9"
   }
 }

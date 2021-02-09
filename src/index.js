@@ -1,6 +1,10 @@
-const { ApolloServer, gql } = require('apollo-server');
-const resolvers = require('./resolvers');
-const typeDefs = require('./typeDefs');
+
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
+
+import * as path from "path";
+import { ApolloServer, gql } from "apollo-server";
+import { StoreResolver, ReservationResolver } from './resolvers.js';
 
 // ⚽️  Goal
 // --------
@@ -14,22 +18,26 @@ const typeDefs = require('./typeDefs');
 // 🏪  Exercise 4
 // --------------
 
-// Now we will focus on creating a reservation, which looks like this:
-// { id, date, reservationProducts: { product: { id, name price }, quantity })).
+// 1) First we create two files. One for our type definitions, `typeDefs.js`,
+//    and one for our resolver functions, `resolvers.js`.
+// 2) Create a GraphQL type definition for our store. A store has an id and a name.
+// 3) Create a Query `stores` to get a list of stores.
+// 4) Create a resolver function that returns the list of stores.
+// 5) Try out the GraphQL query in the GraphQL Playground (🚀 http://localhost:4000/)
 
-// 1) Create a Mutation to create a reservation `createReservation`
-//    that takes an object as input. The input type is named `ReservationInput`.
-//    ReservationInput contains a list of { productId, quantity } (input type is named `ReservationProductInput`),
-//    named `reservationProducts` (field of `ReservationInput`).
-// 2) Now create a resolver function for the mutation and insert it into our in-memory database.
-// 3) Create a query field reservationProducts under Reservation, to get the reservationProducts [{ product, quantity }].
-//    Similar as stores under Query.
-// 4) Go to the GraphQL Playground and try out the createReservation mutation!
+
+
+// create the schema using TypeGraphQL, pass the resolver
+const schema = await buildSchema({
+  resolvers: [StoreResolver, ReservationResolver],
+  nullableByDefault: true,
+  emitSchemaFile: path.resolve(".", "schema.gql"),
+});
 
 // In the most basic sense, the ApolloServer can be started
 // by passing type definitions (typeDefs) and the resolvers
 // responsible for fetching the data for those types.
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ schema });
 
 // This `listen` method launches a web-server. Existing apps
 // can utilize middleware options.
